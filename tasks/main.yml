@@ -1,0 +1,26 @@
+---
+# tasks file for k8s-admin
+- name: install kubectl and helm3
+  community.general.snap:
+    name: "{{ item }}"
+    state: present
+    classic: yes
+  with_items:
+    - kubectl
+    - helm
+
+- name: kustomize
+  block:
+    - name: kustomize install
+      ansible.builtin.unarchive:
+        creates: "{{ kustomize_path }}/kustomize"
+        dest: "{{ kustomize_path }}"
+        remote_src: yes
+        src: "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F\
+             {{ kustomize_version }}/kustomize_\
+             {{ kustomize_version }}_linux_\
+             {{ ansible_architecture|replace('x86_64','amd64') }}.tar.gz"
+    - name: kustomize bash shell completion
+      ansible.builtin.shell:
+        cmd: "kustomize completion bash > /etc/profile.d/kustomize.sh"
+        creates: "/etc/profile.d/kustomize.sh"

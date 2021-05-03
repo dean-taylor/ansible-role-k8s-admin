@@ -1,0 +1,4 @@
+---
+# defaults file for k8s-admin
+kustomize_version: v4.0.1
+kustomize_path: /usr/local/bin
