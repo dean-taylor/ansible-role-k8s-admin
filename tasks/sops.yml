@@ -1,0 +1,15 @@
+---
+# tasks file for k8s-admin SOPS
+#
+- name: SOPS download
+  ansible.builtin.get_url:
+    dest: "/usr/local/bin/sops-{{ sops_version }}.linux"
+    mode: 0755
+    url: "https://github.com/mozilla/sops/releases/download/{{ sops_version }}/sops-{{ sops_version }}.linux"
+
+- name: SOPS symlink
+  ansible.builtin.file:
+    force: yes
+    path: "/usr/local/bin/sops"
+    src: "/usr/local/bin/sops-{{ sops_version }}.linux"
+    state: link
