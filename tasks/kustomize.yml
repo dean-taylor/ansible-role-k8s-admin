@@ -16,4 +16,13 @@
     cmd: "kustomize completion bash > /etc/profile.d/kustomize.sh"
     creates: "/etc/profile.d/kustomize.sh"
 
+- name: helm post renderer wrapper script
+  ansible.builtin.copy:
+    dest: /usr/local/bin/kustomize-wrapper.sh
+    mode: '0755'
+    src: kustomize-wrapper.sh
 
+- name: bash shell function post renderer
+  ansible.builtin.copy:
+    content: 'function helm () { HELM=`which helm`; [[ $1 =~ ^install|upgrade$ ]] && $HELM $@ --post-renderer kustomize-wrapper.sh || $HELM $@; }'
+    dest: /etc/profile.d/helm-kustomize.sh
